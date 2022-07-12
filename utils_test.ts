@@ -1,4 +1,3 @@
-// @ts-ignore
 import { delay } from "https://deno.land/std@0.147.0/async/delay.ts";
 
 Deno.test("async hello world", async () => {
