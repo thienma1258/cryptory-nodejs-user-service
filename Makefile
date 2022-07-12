@@ -12,3 +12,6 @@ test:
 	@deno test $(PWD)
 
 
+run:
+	@echo "==> running"
+	@deno run -c tsconfig.json server.ts

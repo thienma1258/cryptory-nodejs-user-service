@@ -3,7 +3,7 @@ import {errorHandler, log} from './middleware.ts'
 import router from './routes.ts'
 
 configSync({
-    path: '.env',
+    path: '.env.example',
     export: true,
 })
 
@@ -21,23 +21,38 @@ const config: {
     }:${Deno.env.get('CLIENT_PORT') as unknown as number}`,
 }
 
-const app: Application = new Application()
+export class Server {
 
-const corsOptions = {
-    origin: config.clientUrl,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 200,
-    credentials: true,
+  private app :Application;
+  constructor(
+    private readonly classB: ClassB,
+  ) {}
+
+  init(){
+    this.app = new Application()
+
+    const corsOptions = {
+        origin: config.clientUrl,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
+        optionsSuccessStatus: 200,
+        credentials: true,
+    }
+    this.app.use(oakCors(corsOptions))
+    this.app.use(errorHandler)
+    router.init(this.app)
+  }
+
+  async start() {
+    this.app.addEventListener('listen', () => {
+        log.info(`!Server listening at ${config.url}`)
+    })
+    
+    await this.app.listen({port: config.port})
+  }
 }
 
-app.use(oakCors(corsOptions))
-app.use(errorHandler)
 
-router.init(app)
-
-app.addEventListener('listen', () => {
-    log.info(`!Server listening at ${config.url}`)
-})
-
-await app.listen({port: config.port})
+const server = new Server();
+server.init();
+await server.start();

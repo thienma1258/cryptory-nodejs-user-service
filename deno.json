@@ -5,7 +5,7 @@
         "strict": true
     },
     "tasks": {
-        "start": "deno run --allow-all --watch server.ts"
+        "start": "deno run -c tsconfig.json  --allow-all --watch server.ts"
     },
     "lint": {
         "files": {
