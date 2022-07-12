@@ -3,7 +3,7 @@ import {  Singleton } from "https://deno.land/x/deninject/mod.ts";
 
 @Singleton()
 export class UserService {
-    constructor(userRepo: UserRepository){
+    constructor(_userRepo: UserRepository){
 
     }
     sum(numbers: number[]) {
