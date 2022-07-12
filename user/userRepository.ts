@@ -1,5 +1,5 @@
 import * as smallsqliteorm from "https://raw.githubusercontent.com/cybertim/SmallSQLiteORM/main/mod.ts";
-import { Injector, Singleton, Transient } from "https://deno.land/x/deninject/mod.ts"; 
+import {  Singleton } from "https://deno.land/x/deninject/mod.ts"; 
 
 export class User extends smallsqliteorm.SSQLTable {
     id = 0;
