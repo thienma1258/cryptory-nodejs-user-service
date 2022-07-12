@@ -9,7 +9,7 @@ lint:
 # run Lint
 test:
 	@echo "==> test"
-	@deno test $(PWD)
+	@deno test --allow-all $(PWD)
 
 
 run:
