@@ -1,10 +1,9 @@
 
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { MathService } from './mathService.ts';
+import { UserService } from './userService.ts';
 
 Deno.test('UserService', () => {
-    // given
-    const sut = new MathService();
+    const sut = new UserService();
 
     // when
     const result = sut.sum([1, 3, 5]);
