@@ -15,7 +15,6 @@ export class Attribute_User extends SSQLTable {
 const orm = new SSQL("data.db", [User, Attribute_User]);
 // Open a database
 
-@Singleton()
 export class UserRepository {
     findMany(limit: number, offset: number) {
         // Update only 2 logs with status 2 in the db
@@ -24,7 +23,6 @@ export class UserRepository {
 }
 
 
-@Singleton()
 export class UserAttributeRepository {
     findByUserIDs(userIDs: number[]) {
         const result: Record<number, number[]> = {};
@@ -32,7 +30,6 @@ export class UserAttributeRepository {
             {
                 where: { clause: `user_id in (${"?,".repeat(userIDs.length).slice(0, -1)})`, values: userIDs }
             })) {
-                console.log(record);
             const userID = record.user_id;
             if (!result[userID]) {
                 result[userID] = []
@@ -43,7 +40,3 @@ export class UserAttributeRepository {
     }
 }
 
-
-export class UserImageRepository {
-
-}

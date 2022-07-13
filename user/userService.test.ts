@@ -1,14 +1,11 @@
 
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { UserService } from './userService.ts';
-import Injector from "../appModule.ts"
+import  UserService  from './userService.ts';
 
 Deno.test('UserService', () => {
-    const userService = Injector.get(UserService)
-
+    console.log(UserService);
     // when
-    const result = userService.sum([1, 3, 5]);
+    const result = UserService.query(5,5);
 
     // then
-    assertEquals(result, 9);
 })
