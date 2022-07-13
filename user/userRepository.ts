@@ -20,6 +20,14 @@ export class UserRepository {
         // Update only 2 logs with status 2 in the db
         return orm.findMany(User, { offset: offset, limit: limit });
     }
+
+    findByID(id:number) {
+        return orm.findOne(User, id);
+    }
+
+    createNew(uesr: User){
+        orm.save(user);
+    }
 }
 
 
@@ -37,6 +45,13 @@ export class UserAttributeRepository {
             result[userID].push(record.attribute_id as number)
         }
         return result;
+    }
+
+    createNewMany(userAttributes: Attribute_User[]) {
+        for (let i = 0; i < userAttributes.length; i++) {
+            orm.save(userAttributes[i]);
+        }
+
     }
 }
 

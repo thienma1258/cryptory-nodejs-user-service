@@ -20,6 +20,10 @@ class ImageService {
         }
         return result;
     }
+
+    creatNewMany(images:Image[]){
+        return this._repo.createNewMany(images)
+    }
 }
 
 let repo = new ImageRepository();

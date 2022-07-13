@@ -6,6 +6,15 @@ import {log} from './middleware.ts'
 // deno-lint-ignore no-explicit-any
 const router: any = new Router()
 
+  /**
+   * @swagger
+   * /:
+   *   get:
+   *     description: Returns the homepage
+   *     responses:
+   *       200:
+   *         description: hello world
+   */
 router.get('/', ({_params, response}: RouterContext<string>) => {
     log.debug('Serving hello world')
     response.body = 'Hello world!'

@@ -23,5 +23,8 @@ export class AttributeRepository {
         // Update only 2 logs with status 2 in the db
         return orm.findMany(Attribute, {});
     }
+    createNew(attribute:Attribute){
+        return orm.save(attribute);
+    }
 }
 

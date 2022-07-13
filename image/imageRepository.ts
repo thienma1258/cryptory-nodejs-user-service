@@ -21,7 +21,13 @@ export class ImageRepository {
             where: { clause: `user_id in (${"?,".repeat(userIDs.length).slice(0, -1)})`, values: userIDs },
             order: { by: sortBy ? sortBy : "id", desc: true }
         });
+    }
 
+    createNewMany(images:Image[]) {
+        // Update only 2 logs with status 2 in the db
+        for (let i = 0; i < images.length; i++) {
+            orm.save(images[i]);
+        }
     }
 }
 

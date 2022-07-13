@@ -1,6 +1,6 @@
 import { Transient, Inject } from "https://deno.land/x/deninject/mod.ts";
 
-import { UserRepository, UserAttributeRepository, User, UserAttribute } from "./index.ts";
+import { UserRepository, UserAttributeRepository, User, UserAttribute,UserValidationError,CreateUserMedia,CreateUserAttribute } from "./index.ts";
 
 import AttributeService from "../attribute/attributeService.ts";
 import ImageService from "../image/imageService.ts";
@@ -15,6 +15,19 @@ class UserService {
         // readonly imageService: ImageService
 
     ) {
+    }
+
+    validate(createModel:CreateUserAttribute[]) {
+        var errors: string[]=[];
+        return  errors;
+    }
+
+    createAttribute(attributes:userAttributes[]){
+        return  userAttrRepo.createNewMany(attributes);
+    }
+
+    createMedia(medias:CreateUserMedia[]){
+        return  imageService.creatNewMany(medias);
     }
 
     queryAttribute(users: User[]): User[] {
@@ -80,6 +93,36 @@ class UserService {
         this.queryMedia(result);
         return result;
 
+    }
+
+    queryByID(id:number) {
+        const user = this.userRepo.findOne(id);
+        if (!user){
+            throw new  UserValidationError(["id not existed"])
+        }
+        var result: User[] = [
+            {
+                ...user
+            }
+        ];
+
+        this.queryAttribute(result);
+        this.queryMedia(result);
+        return result[0];
+    }
+
+    createNew(createModel:CreateNewUserAttribute){
+        errors= this.validate(createModel);
+        if (errors.length >0) {
+            throw new UserValidationError(errors);
+        }
+        var user= createModel.map(model=>{
+            ...model
+        })
+        var userID= this.userRepo.createNew(user);
+        this.createAttribute(user.attributes);
+        this.createMedia(user.media);
+        return this.queryByID(userID);
     }
 }
 
