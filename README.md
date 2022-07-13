@@ -1,8 +1,3 @@
-## Assignment
-
-Welcome to the Cryptory backend assignment! We tried to give you an interesting and brief challenge to show of your skills. We have tried to constrain the assignment to a few hours, in case it takes you longer than that, feel free to submit a partial assignment. Thank you for taking the time to work on this, we're looking forward to the result.
-
-In case you have any issues or feedback, feel free to reach out to our recruiter!
 
 ## Requirements
 
