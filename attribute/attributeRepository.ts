@@ -11,11 +11,17 @@ const orm = new SSQL("data.db", [Attribute]);
 
 @Singleton()
 export class AttributeRepository {
-    findByIDs(ids :number[]) {
+    findByIDs(ids: number[], sortBy?: string) {
         // Update only 2 logs with status 2 in the db
-        return orm.findMany(Attribute,   {
-            where: { clause: `id in (${"?,".repeat(ids.length).slice(0, -1)})`, values: ids }
+        return orm.findMany(Attribute, {
+            where: { clause: `id in (${"?,".repeat(ids.length).slice(0, -1)})`, values: ids },
+            order: { by: sortBy ? sortBy : "id", desc: true }
         });
+    }
+
+    findAll(ids: number[]) {
+        // Update only 2 logs with status 2 in the db
+        return orm.findMany(Attribute, {});
     }
 }
 

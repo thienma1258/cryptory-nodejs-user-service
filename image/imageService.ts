@@ -9,7 +9,8 @@ class ImageService {
     findByManyUserIDs(userIDs: number[]) {
         const result: Record<number, Image[]> = {};
 
-        let images = this._repo.findByUserIDs(userIDs);
+        //sort by created
+        let images = this._repo.findByUserIDs(userIDs,"created");
         for (const record of images) {
             const userID = record.user_id;
             if (!result[userID]) {

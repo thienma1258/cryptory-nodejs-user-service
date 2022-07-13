@@ -15,10 +15,11 @@ const orm = new SSQL("data.db", [Image]);
 
 @Singleton()
 export class ImageRepository {
-    findByUserIDs(userIDs :number[]) {
+    findByUserIDs(userIDs :number[],sortBy?:string) {
         // Update only 2 logs with status 2 in the db
         return orm.findMany(Image,   {
-            where: { clause: `user_id in (${"?,".repeat(userIDs.length).slice(0, -1)})`, values: userIDs }
+            where: { clause: `user_id in (${"?,".repeat(userIDs.length).slice(0, -1)})`, values: userIDs },
+            order: { by: sortBy ? sortBy : "id", desc: true }
         });
 
     }

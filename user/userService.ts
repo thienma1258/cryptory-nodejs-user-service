@@ -54,13 +54,16 @@ class UserService {
 
     queryMedia(users: User[]): User[] {
         let userIDs = users.map(user => user.id);
-        var userAttr = this.imageService.findByManyUserIDs(userIDs);
+        var userMedia = this.imageService.findByManyUserIDs(userIDs);
         users.forEach(user => {
-            let userMedia: UserMedia[] = [];
-            if (!userAttr[user.id] && userAttr[user.id].length > 0) {
+            if (!userMedia[user.id] && userMedia[user.id].length > 0) {
                 return
             }
-            user.media = userMedia;
+            user.media= userMedia[user.id].map(media=>{
+                return {
+                    ...media
+                }
+            });
         });
         return users;
     }
@@ -74,6 +77,8 @@ class UserService {
             }
         })
         this.queryAttribute(result);
+        this.queryMedia(result);
+        return result;
 
     }
 }
