@@ -1,4 +1,4 @@
-import { ImageRepository,Image } from "./ImageRepository.ts";
+import { ImageRepository,Image } from "./imageRepository.ts";
 import { Singleton } from "https://deno.land/x/deninject/mod.ts";
 
 @Singleton()
@@ -21,7 +21,7 @@ class ImageService {
         return result;
     }
 
-    creatNewMany(images:Image[]){
+    createNewMany(images:Image[]){
         return this._repo.createNewMany(images)
     }
 }

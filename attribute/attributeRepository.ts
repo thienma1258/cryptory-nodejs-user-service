@@ -5,9 +5,8 @@ export class Attribute extends SSQLTable {
     id = 0;
     name = "";
 }
+const orm= new SSQL("data.db",[Attribute])
 
-const orm = new SSQL("data.db", [Attribute]);
-// Open a database
 
 @Singleton()
 export class AttributeRepository {
@@ -19,7 +18,7 @@ export class AttributeRepository {
         });
     }
 
-    findAll(ids: number[]) {
+    findAll() {
         // Update only 2 logs with status 2 in the db
         return orm.findMany(Attribute, {});
     }

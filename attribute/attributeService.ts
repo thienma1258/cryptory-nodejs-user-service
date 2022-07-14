@@ -16,7 +16,7 @@ export class AttributeService {
         return this._repo.createNew(attribute);
     }
 }
-}
+
 
 let repo = new AttributeRepository();
 export default new AttributeService(repo);

@@ -2,7 +2,7 @@ import { Singleton } from "https://deno.land/x/deninject/mod.ts";
 import { SSQL, SSQLTable } from "../lib/SmallSQLLite.ts";
 
 export class Image extends SSQLTable {
-    id = 0;
+    id? = 0;
     name = "";
     created=0;
     height=0;
@@ -10,8 +10,8 @@ export class Image extends SSQLTable {
     user_id=0;
 }
 
-const orm = new SSQL("data.db", [Image]);
-// Open a database
+
+const orm= new SSQL("data.db",[Image])
 
 @Singleton()
 export class ImageRepository {
@@ -24,10 +24,12 @@ export class ImageRepository {
     }
 
     createNewMany(images:Image[]) {
-        // Update only 2 logs with status 2 in the db
-        for (let i = 0; i < images.length; i++) {
-            orm.save(images[i]);
-        }
+        orm.save(images[0]);
+        console.log(images);
+        // for (let i = 0; i < images.length; i++) {
+        //     console.log("save image");
+        //     orm.save(images[i]);
+        // }
     }
 }
 

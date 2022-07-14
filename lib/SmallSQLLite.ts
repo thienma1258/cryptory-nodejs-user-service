@@ -15,7 +15,7 @@ import { DB } from "https://deno.land/x/sqlite@v2.5.0/mod.ts";
  * @class SSQLTable
  */
 export class SSQLTable {
-    id = -1;
+    id? = -1;
 }
 
 /**
@@ -122,6 +122,8 @@ export class SSQL {
     }
 
     private insertRecord<T extends SSQLTable>(table: T) {
+        console.log(table);
+        console.log(table.constructor.name);
         const names = Object.getOwnPropertyNames(table);
         names.splice(0, 1);
         const statement = 'INSERT INTO "' +
@@ -133,6 +135,7 @@ export class SSQL {
             const v = Object.getOwnPropertyDescriptor(table, p);
             data.push(v?.value);
         }
+        console.log(statement);
         this.db.query(statement, data);
         table.id = this.db.lastInsertRowId;
     }

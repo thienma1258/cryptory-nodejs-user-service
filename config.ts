@@ -1,0 +1,1 @@
+export const DB = Deno.env.get('DB')

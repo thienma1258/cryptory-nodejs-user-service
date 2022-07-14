@@ -1,24 +1,26 @@
-export interface User {
+
+export * from "./userRepository.ts"
+export * from "./userService.ts"
+
+export interface UserModel {
     id:number;
     first_name: string;
     last_name: string;
-    media?:UserMedia[] ,
-    attributes?:UserAttribute[] ,
+    birthday:number;
+    email:string;
+    media?:UserMedia[] ;
+    attributes?:UserAttribute[] ;
 }
 
-export interface CreateNewUser {
-    id:number;
-    first_name: string;
-    last_name: string;
-    media?:UserMedia[] ,
-    attributes?:UserAttribute[] ,
+export interface UserAttribute {
+    name:string;
 }
 
 export interface UserMedia {
     name:string;
-    created:string;
-    height:string;
-    width:string;
+    created:number;
+    height:number;
+    width:number;
 }
 
 export interface CreateUserMedia  extends UserMedia{
@@ -30,17 +32,23 @@ export interface CreateUserAttribute {
 export interface CreateNewUser{
     first_name: string;
     last_name: string;
-    media?:CreateUserMedia[] ,
-    attributes?:CreateUserAttribute[] ,
+    birthday:number,
+    email:string,
+    media?:CreateUserMedia[],
+    attributes?:CreateUserAttribute[],
 }
 
-export * from "./userRepository.ts";
-export * from "./userService.ts";
 
 export class UserValidationError extends Error {
-    constructor(messages?: string []) {
+    errorMessages:string[];
+    constructor(messages: string []) {
         // 'Error' breaks prototype chain here
-        super(message); 
+        super("validation user error"); 
+        this.errorMessages=messages;
+      }
+
+      getErrorMessages(){
+          return this.errorMessages;
       }
 
 }
