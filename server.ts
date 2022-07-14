@@ -1,23 +1,17 @@
-import { Application, oakCors, configSync } from './deps.ts'
+import { Application, oakCors } from './deps.ts'
 import { errorHandler, log } from './middleware.ts'
 import router from './routes.ts'
-import swaggerSpec from "./swagger.ts"
-
-configSync({
-    path: '.env.example',
-    export: true,
-})
+import {PORT,URL,CLIENT_URL} from "./config.ts"
+// import swaggerSpec from "./swagger.ts"
 
 const config: {
     port: number
     url: string
     clientUrl: string
 } = {
-    port: Number(Deno.env.get('PORT') as unknown as number),
-    url: `${Deno.env.get('PROTOCOL') as unknown as string}://${Deno.env.get('HOST') as unknown as string
-        }:${Deno.env.get('PORT') as unknown as number}`,
-    clientUrl: `${Deno.env.get('CLIENT_PROTOCOL') as unknown as string}://${Deno.env.get('CLIENT_HOST') as unknown as string
-        }:${Deno.env.get('CLIENT_PORT') as unknown as number}`,
+    port:PORT ,
+    url: URL,
+    clientUrl:CLIENT_URL,
 }
 
 export class Server {
@@ -47,7 +41,7 @@ export class Server {
             if (context.request.url.pathname === '/swagger.json') {
                 context.response.headers.set('Content-Type', 'application/json');
                 context.response.status = 200;
-                context.response.body = swaggerSpec
+                context.response.body = "swaggerFile"
             } else {
                 await next();
             }

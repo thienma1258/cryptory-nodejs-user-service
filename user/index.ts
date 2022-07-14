@@ -2,7 +2,7 @@
 export * from "./userRepository.ts"
 export * from "./userService.ts"
 export {User,Attribute_User} from "./db.ts"
-import {  required, isNumber,isString,validateArray,invalid } from "https://deno.land/x/validasaur/mod.ts";
+import {  required, isNumber,isString,validateArray,invalid,isEmail } from "https://deno.land/x/validasaur/mod.ts";
 
 export interface UserModel {
     id:number;
@@ -45,7 +45,7 @@ export const validateRuleCreateUser = {
     first_name: [required,isString],
     last_name: [required,isString],
     birthday: [required, isNumber,isAtLeast18YearsOld],
-    email: [required,isString],
+    email: [required,isString,isEmail],
     media: validateArray(false,[]),
     attributes:validateArray(false,[]),
 }

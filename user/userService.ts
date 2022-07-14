@@ -1,4 +1,4 @@
-import { validateRuleCreateUser,validateMedia,validateAttribute,UserRepository, UserModel, UserAttribute, UserAttributeRepository, User, Attribute_User, UserValidationError, CreateUserMedia, CreateUserAttribute, CreateNewUser } from "./index.ts"
+import { validateRuleCreateUser,validateMedia,validateAttribute,UserRepository, UserModel, UserAttribute, UserAttributeRepository, User, Attribute_User, CreateUserMedia, CreateUserAttribute, CreateNewUser } from "./index.ts"
 
 import AttributeService from "../attribute/attributeService.ts"
 import ImageService from "../image/imageService.ts"
@@ -6,7 +6,7 @@ import { Image } from "../image/index.ts"
 import {
     validate,
   } from "https://deno.land/x/validasaur/mod.ts";
-  
+  import {ValidationError} from "../errors.ts";
 class UserService {
     constructor(
         readonly userRepo: UserRepository,
@@ -21,7 +21,7 @@ class UserService {
 
     async validateNewUser(_createModel: CreateNewUser) {
         const errors  = await validate(_createModel,validateRuleCreateUser);
-        const passes:boolean=errors[0]
+        let passes:boolean=errors[0]
         let errorMessages:{
             [ruleName: string]: string | any
         }={
@@ -43,7 +43,9 @@ class UserService {
         }
 
         if (_createModel.attributes && _createModel.attributes.length>0 ){
+            var ids:number[] = [];
             for(const a of _createModel.attributes){
+                ids.push(a.attribute_id);
                 const [ passesAttr, errorsAttr ]=await validate(a,validateAttribute);
                 if (!passesAttr) {
                     passes=passesAttr;
@@ -53,6 +55,14 @@ class UserService {
                             ...errorsAttr
                         }
                     }
+                }
+            }
+            const attrs = this.attributeService.findByManyIDs(ids);
+            if (attrs.length != ids.length){
+                passes=false;
+                errorMessages.attributes={
+                    ...errorMessages.attributes,
+                    "attrID is not valid":ids,
                 }
             }
         }
@@ -85,6 +95,28 @@ class UserService {
             return image;
         });
         return this.imageService.createNewMany(images);
+    }
+
+    async createNew(createModel: CreateNewUser) {
+        const [ passes, errors ] = await this.validateNewUser(createModel);
+        if (!passes) {
+            throw new ValidationError(errors);
+        }
+        const insertUser:User =new User();
+        insertUser.last_name=createModel.last_name;
+        insertUser.first_name=createModel.first_name;
+        insertUser.birthday=createModel.birthday;
+        insertUser.email=createModel.email;
+
+        const userID = this.userRepo.createNew(insertUser);
+
+        if (createModel.attributes){
+            this.createAttribute(createModel.attributes,userID);
+        }
+        if(createModel.media){
+            this.createMedia(createModel.media,userID);
+        }
+        return this.queryByID(userID);
     }
 
     queryAttribute(users: UserModel[]): UserModel[] {
@@ -157,7 +189,7 @@ class UserService {
     queryByID(id: number) {
         const user = this.userRepo.findByID(id);
         if (!user) {
-            throw new UserValidationError(["id not existed"])
+            throw new ValidationError(["id not existed"])
         }
         const result: UserModel[] = [
             {
@@ -169,27 +201,10 @@ class UserService {
         return result[0];
     }
 
-    async createNew(createModel: CreateNewUser) {
-        const [ passes, errors ] = await this.validateNewUser(createModel);
-        if (!passes) {
-            throw new UserValidationError(errors);
-        }
-        const insertUser:User =new User();
-        insertUser.last_name=createModel.last_name;
-        insertUser.first_name=createModel.first_name;
-        insertUser.birthday=createModel.birthday;
-        insertUser.email=createModel.email;
-
-        const userID = this.userRepo.createNew(insertUser);
-
-        if (createModel.attributes){
-            this.createAttribute(createModel.attributes,userID);
-        }
-        if(createModel.media){
-            this.createMedia(createModel.media,userID);
-        }
-        return this.queryByID(userID);
+    count(){
+        return this.userRepo.count();
     }
+
 }
 
 const userRepo = new UserRepository();

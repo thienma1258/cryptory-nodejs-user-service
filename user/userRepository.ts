@@ -14,6 +14,9 @@ export class UserRepository {
         orm.save(user);
         return user.id;
     }
+    count(){
+        return orm.count(User);
+    }
 }
 
 export class UserAttributeRepository {

@@ -1,7 +1,8 @@
-import { AttributeRepository } from "./attributeRepository.ts";
-import {  Singleton } from "https://deno.land/x/deninject/mod.ts";
-import {Attribute} from "./db.ts";
-
+import { AttributeRepository } from "./attributeRepository.ts"
+import {  Singleton } from "https://deno.land/x/deninject/mod.ts"
+import {Attribute,validateAttribute} from "./index.ts"
+import {  validate} from "https://deno.land/x/validasaur/mod.ts"
+import {ValidationError} from "../errors.ts"
 @Singleton()
 export class AttributeService {
     constructor(readonly _repo: AttributeRepository){
@@ -15,8 +16,13 @@ export class AttributeService {
         return this._repo.findAll();
     }
 
-    createNew(attribute:Attribute) {
-        return this._repo.createNew(attribute);
+    async createNew(attribute:Attribute) {
+        const [passes,errors]= await validate(attribute,validateAttribute);
+        if (!passes){
+            throw new ValidationError(errors);
+        }
+        this._repo.createNew(attribute);
+        return attribute;
     }
 }
 

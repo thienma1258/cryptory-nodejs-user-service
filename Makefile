@@ -14,4 +14,4 @@ test:
 
 run:
 	@echo "==> running"
-	@deno run -c tsconfig.json server.ts
+	@deno run --allow-all -c tsconfig.json server.ts
