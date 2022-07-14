@@ -1,0 +1,35 @@
+name: release
+
+on:
+  push:
+    branches:
+      - "release-v*"
+
+env:
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+  GITHUB_SHA: ${{ github.sha }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  build-docker-image:
+    name: docker-build
+    runs-on: self-hosted
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run lint
+        run: make build-docker
+  deploy-new-image:
+    name: docker-build
+    runs-on: self-hosted
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run lint
+        run: make build-docker
+
+

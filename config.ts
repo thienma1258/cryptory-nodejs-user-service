@@ -1,7 +1,7 @@
 import { configSync } from './deps.ts'
 
 configSync({
-    path: '.env.example',
+    path: '.env',
     export: true,
 })
 export const ENV = Deno.env.get('ENV') || "test"
