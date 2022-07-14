@@ -22,7 +22,7 @@ jobs:
       - name: Run lint
         run: make build-docker
   deploy-new-image:
-    name: docker-build
+    name: docker-deploy
     runs-on: self-hosted
     steps:
 
