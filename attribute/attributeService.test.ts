@@ -13,12 +13,12 @@ Deno.test('AttributeService can find new attribute', () => {
     assertEquals(result.length > 0, true)
 })
 
-Deno.test('AttributeService can create new attribute', () => {
+Deno.test('AttributeService can create new attribute',async () => {
     const attribute = new Attribute();
     attribute.name="test";
     orm.save(attribute);
     // when
-    const result = AttributeService.createNew(attribute);
+    const result = await AttributeService.createNew(attribute);
     // then
     assertEquals(result.name, attribute.name)
     assertEquals(result.id >0, true)

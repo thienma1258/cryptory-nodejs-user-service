@@ -43,7 +43,7 @@ class UserService {
         }
 
         if (_createModel.attributes && _createModel.attributes.length>0 ){
-            var ids:number[] = [];
+            const ids:number[] = [];
             for(const a of _createModel.attributes){
                 ids.push(a.attribute_id);
                 const [ passesAttr, errorsAttr ]=await validate(a,validateAttribute);

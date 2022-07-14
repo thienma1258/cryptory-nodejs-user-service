@@ -8,7 +8,7 @@ export default {
      * @description Get all todos
      * @route GET /todos
      */
-    getQuery: async (
+    getQuery:  (
         { request, response }: { request: any; response: any },
     ) => {
         const offsetRaw=request.url.searchParams.get('offset');
@@ -21,8 +21,8 @@ export default {
         if(!isNaN(limitRaw)){
             limit=Number(limitRaw);
         }
-        let count = UserService.count();
-        let queryData = UserService.query(limit,offset);
+        const count = UserService.count();
+        const queryData = UserService.query(limit,offset);
         response.body = {
             success: true,
             data: queryData,
@@ -49,9 +49,8 @@ export default {
         }
         try {
             const value = await body.value;
-            var newUserCreated=await UserService.createNew({
-                ...value
-            });
+
+            const newUserCreated=await UserService.createNew(value);
             response.body = {
                 success: true,
                 data: newUserCreated,

@@ -57,15 +57,12 @@ Deno.test("UserService can create new user",async () => {
 
 });
 
-Deno.test("UserService can unexisted attribute id", async () => {
+Deno.test("UserService can create empty attribute id", async () => {
     const createModel: CreateNewUser = {
         first_name: "ngocdong",
         last_name: "pham",
         birthday: 232736400,
         email: "cpud1258@gmail.com",
-        attributes: [{
-            attribute_id: 50
-        }],
         media: [{
             name: "new media",
             created: 232736400,
@@ -78,8 +75,6 @@ Deno.test("UserService can unexisted attribute id", async () => {
     assertEquals(result.id > 0, true)
     assertEquals(result.first_name , createModel.first_name)
     assertEquals(result.email , createModel.email)
-    assertExists(result.attributes)
-    assertEquals(result.attributes[0].attribute_id , createModel.attributes?createModel.attributes[0].attribute_id:0)
     assertExists(result.media);
 });
 
@@ -118,7 +113,7 @@ Deno.test("UserServiceValidation", async () => {
         birthday: 232736400,
         email: "cpud1258@gmail.com",
         attributes: [{
-            attribute_id: 50
+            attribute_id: 1
         }],
         media: [{
             name: "new media",
