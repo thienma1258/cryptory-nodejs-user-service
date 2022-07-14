@@ -30,7 +30,7 @@ Deno.test('UserService can query by id', () => {
 
 })
 
-Deno.test("UserService can create new user", () => {
+Deno.test("UserService can create new user",async () => {
     const createModel: CreateNewUser = {
         first_name: "ngocdong",
         last_name: "pham",
@@ -47,7 +47,7 @@ Deno.test("UserService can create new user", () => {
         }]
 
     }
-    const result = UserService.createNew(createModel);
+    const result = await UserService.createNew(createModel);
     assertEquals(result.id > 0, true)
     assertEquals(result.first_name , createModel.first_name)
     assertEquals(result.email , createModel.email)
@@ -57,7 +57,7 @@ Deno.test("UserService can create new user", () => {
 
 });
 
-Deno.test("UserService can unexisted attribute id", () => {
+Deno.test("UserService can unexisted attribute id", async () => {
     const createModel: CreateNewUser = {
         first_name: "ngocdong",
         last_name: "pham",
@@ -74,12 +74,89 @@ Deno.test("UserService can unexisted attribute id", () => {
         }]
 
     }
-    const result = UserService.createNew(createModel);
+    const result =await UserService.createNew(createModel);
     assertEquals(result.id > 0, true)
     assertEquals(result.first_name , createModel.first_name)
     assertEquals(result.email , createModel.email)
     assertExists(result.attributes)
     assertEquals(result.attributes[0].attribute_id , createModel.attributes?createModel.attributes[0].attribute_id:0)
     assertExists(result.media);
+});
 
+
+Deno.test("UserService can create new user", async () => {
+    const createModel: CreateNewUser = {
+        first_name: "ngocdong",
+        last_name: "pham",
+        birthday: 232736400,
+        email: "cpud1258@gmail.com",
+        attributes: [{
+            attribute_id: 1
+        }],
+        media: [{
+            name: "new media",
+            created: 232736400,
+            height: 12,
+            width: 52
+        }]
+
+    }
+    const result = await UserService.createNew(createModel);
+    assertEquals(result.id > 0, true)
+    assertEquals(result.first_name , createModel.first_name)
+    assertEquals(result.email , createModel.email)
+    assertExists(result.attributes)
+    assertEquals(result.attributes[0].attribute_id , createModel.attributes?createModel.attributes[0].attribute_id:0)
+    assertExists(result.media)
+
+});
+
+Deno.test("UserServiceValidation", async () => {
+    const createModel: CreateNewUser = {
+        first_name: "ngocdong",
+        last_name: "",
+        birthday: 232736400,
+        email: "cpud1258@gmail.com",
+        attributes: [{
+            attribute_id: 50
+        }],
+        media: [{
+            name: "new media",
+            created: 232736400,
+            height: 12,
+            width: 52
+        }]
+
+    }
+    let [ passes, errors ] =await  UserService.validateNewUser(createModel);
+    assertEquals(passes, false)
+    assertExists(errors["last_name"]);
+    assertEquals(Object.keys(errors).length ==1,true);
+    createModel.first_name="";
+    [ passes, errors ] =await  UserService.validateNewUser(createModel);
+    assertEquals(passes, false)
+    assertExists(errors["first_name"]);
+    assertEquals(Object.keys(errors).length ==2,true);
+    createModel.birthday=1341538137;
+    [ passes, errors ] =await  UserService.validateNewUser(createModel);
+    assertEquals(passes, false)
+    assertExists(errors["birthday"]);
+    assertEquals(Object.keys(errors).length ==3,true);
+    createModel.birthday=0;
+    [ passes, errors ] =await  UserService.validateNewUser(createModel);
+    assertEquals(passes, false)
+    assertEquals(Object.keys(errors).length ==3,true);
+    createModel.media=[];
+    assertEquals(passes, false)
+    assertEquals(Object.keys(errors).length ==3,true);
+    createModel.media=[{
+        name: "",
+        created: 232736400,
+        width:0,
+        height: 12,
+    }];
+    [ passes, errors ] =await  UserService.validateNewUser(createModel);
+    console.log(errors);
+    assertEquals(passes, false)
+    assertEquals(Object.keys(errors).length == 4,true);
 });

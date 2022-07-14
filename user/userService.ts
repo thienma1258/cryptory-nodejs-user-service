@@ -1,9 +1,12 @@
-import { UserRepository, UserModel, UserAttribute, UserAttributeRepository, User, Attribute_User, UserValidationError, CreateUserMedia, CreateUserAttribute, CreateNewUser } from "./index.ts"
+import { validateRuleCreateUser,validateMedia,validateAttribute,UserRepository, UserModel, UserAttribute, UserAttributeRepository, User, Attribute_User, UserValidationError, CreateUserMedia, CreateUserAttribute, CreateNewUser } from "./index.ts"
 
 import AttributeService from "../attribute/attributeService.ts"
 import ImageService from "../image/imageService.ts"
 import { Image } from "../image/index.ts"
-
+import {
+    validate,
+  } from "https://deno.land/x/validasaur/mod.ts";
+  
 class UserService {
     constructor(
         readonly userRepo: UserRepository,
@@ -16,8 +19,45 @@ class UserService {
     ) {
     }
 
-    validate(_createModel: CreateNewUser) {
-        const errors: string[] = [];
+    async validateNewUser(_createModel: CreateNewUser) {
+        const errors  = await validate(_createModel,validateRuleCreateUser);
+        const passes:boolean=errors[0]
+        let errorMessages:{
+            [ruleName: string]: string | any
+        }={
+            ...errors[1]
+        }
+        if (_createModel.media && _createModel.media.length>0 ){
+            for(const m of _createModel.media){
+                const [ passesMedia, errorsMedia ]= await validate(m,validateMedia);
+                if (!passesMedia) {
+                    passes=passesMedia as boolean;
+                    errorMessages={
+                        ...errors[1],
+                        "media":{
+                            ...errorsMedia
+                        }
+                    }
+                }
+            }
+        }
+
+        if (_createModel.attributes && _createModel.attributes.length>0 ){
+            for(const a of _createModel.attributes){
+                const [ passesAttr, errorsAttr ]=await validate(a,validateAttribute);
+                if (!passesAttr) {
+                    passes=passesAttr;
+                    errorMessages={
+                        ...errors[1],
+                        "attributes":{
+                            ...errorsAttr
+                        }
+                    }
+                }
+            }
+        }
+        errors[1]=errorMessages;
+        errors[0]=passes;
         return errors;
     }
 
@@ -129,9 +169,9 @@ class UserService {
         return result[0];
     }
 
-    createNew(createModel: CreateNewUser) {
-        const errors = this.validate(createModel);
-        if (errors.length > 0) {
+    async createNew(createModel: CreateNewUser) {
+        const [ passes, errors ] = await this.validateNewUser(createModel);
+        if (!passes) {
             throw new UserValidationError(errors);
         }
         const insertUser:User =new User();
