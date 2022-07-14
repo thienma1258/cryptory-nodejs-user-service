@@ -1,11 +1,5 @@
 import { Singleton } from "https://deno.land/x/deninject/mod.ts";
-import { SSQL, SSQLTable } from "../lib/SmallSQLLite.ts";
-
-export class Attribute extends SSQLTable {
-    id = 0;
-    name = "";
-}
-const orm= new SSQL("data.db",[Attribute])
+import {orm,Attribute} from "./db.ts"
 
 
 @Singleton()
@@ -23,7 +17,8 @@ export class AttributeRepository {
         return orm.findMany(Attribute, {});
     }
     createNew(attribute:Attribute){
-        return orm.save(attribute);
+         orm.save(attribute);
+         return attribute;
     }
 }
 

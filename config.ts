@@ -1,1 +1,1 @@
-export const DB = Deno.env.get('DB')
+export const DB = Deno.env.get('DB') || "default.db"

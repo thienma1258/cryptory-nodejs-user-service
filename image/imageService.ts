@@ -1,6 +1,6 @@
-import { ImageRepository,Image } from "./imageRepository.ts";
+import { ImageRepository } from "./imageRepository.ts";
 import { Singleton } from "https://deno.land/x/deninject/mod.ts";
-
+import {Image} from "./db.ts";
 @Singleton()
 class ImageService {
     constructor(readonly _repo: ImageRepository) {
@@ -10,7 +10,7 @@ class ImageService {
         const result: Record<number, Image[]> = {};
 
         //sort by created
-        let images = this._repo.findByUserIDs(userIDs,"created");
+        const images = this._repo.findByUserIDs(userIDs,"created");
         for (const record of images) {
             const userID = record.user_id;
             if (!result[userID]) {
@@ -26,5 +26,5 @@ class ImageService {
     }
 }
 
-let repo = new ImageRepository();
+const repo = new ImageRepository();
 export default new ImageService(repo);

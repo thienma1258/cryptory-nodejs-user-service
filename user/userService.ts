@@ -1,5 +1,3 @@
-import { Transient, Inject } from "https://deno.land/x/deninject/mod.ts"
-
 import { UserRepository, UserModel, UserAttribute, UserAttributeRepository, User, Attribute_User, UserValidationError, CreateUserMedia, CreateUserAttribute, CreateNewUser } from "./index.ts"
 
 import AttributeService from "../attribute/attributeService.ts"
@@ -18,14 +16,14 @@ class UserService {
     ) {
     }
 
-    validate(createModel: CreateNewUser) {
-        var errors: string[] = [];
+    validate(_createModel: CreateNewUser) {
+        const errors: string[] = [];
         return errors;
     }
 
     createAttribute(attributes: CreateUserAttribute[], userID: number) {
-        var attribueUser: Attribute_User[] = attributes.map((attribute) => {
-            let attr:Attribute_User= new Attribute_User()
+        const attribueUser: Attribute_User[] = attributes.map((attribute) => {
+            const attr:Attribute_User= new Attribute_User()
             attr.user_id=userID;
             attr.attribute_id=attribute.attribute_id;
             return attr;
@@ -37,8 +35,8 @@ class UserService {
         if (!media || media.length == 0) {
             return
         }
-        var images: Image[] = media.map(m => {
-            let image= new Image();
+        const images: Image[] = media.map(m => {
+            const image= new Image();
             image.user_id=userID;
             image.created=m.created;
             image.height=m.height;
@@ -50,12 +48,12 @@ class UserService {
     }
 
     queryAttribute(users: UserModel[]): UserModel[] {
-        let userIDs = users.map(user => user.id);
-        var userAttr = this.userAttrRepo.findByUserIDs(userIDs);
-        var attrIDsMap: Record<number, string> = {}
-        let attrIDs: number[] = [];
-        for (let key in userAttr) {
-            let values = userAttr[key as unknown as number];
+        const userIDs = users.map(user => user.id);
+        const userAttr = this.userAttrRepo.findByUserIDs(userIDs);
+        const attrIDsMap: Record<number, string> = {}
+        const attrIDs: number[] = [];
+        for (const key in userAttr) {
+            const values = userAttr[key as unknown as number];
             values.map((attrID: number) => {
                 if (!attrIDsMap[attrID]) {
                     attrIDsMap[attrID] = "";
@@ -63,19 +61,20 @@ class UserService {
                 }
             })
         }
-        var result = this.attributeService.findByManyIDs(attrIDs);
+        const result = this.attributeService.findByManyIDs(attrIDs);
         result.map((attribute) => {
             attrIDsMap[attribute.id] = attribute.name;
         });
 
         users.forEach(user => {
-            let attributes: UserAttribute[] = [];
+            const attributes: UserAttribute[] = [];
             if (!userAttr[user.id]  || userAttr[user.id].length == 0) {
                 return
             }
             userAttr[user.id].forEach(element => {
                 attributes.push({
-                    name: attrIDsMap[element]
+                    name: attrIDsMap[element],
+                    attribute_id: element,
                 })
             });
             user.attributes = attributes;
@@ -85,8 +84,8 @@ class UserService {
     }
 
     queryMedia(users: UserModel[]): UserModel[] {
-        let userIDs = users.map(user => user.id);
-        var userMedia = this.imageService.findByManyUserIDs(userIDs);
+        const userIDs = users.map(user => user.id);
+        const userMedia = this.imageService.findByManyUserIDs(userIDs);
         users.forEach(user => {
             if (!userMedia[user.id] || userMedia[user.id].length == 0) {
                 return
@@ -102,7 +101,7 @@ class UserService {
 
     query(limit: number, offset: number) {
         const users = this.userRepo.findMany(limit, offset);
-        var result: UserModel[] = [];
+        const result: UserModel[] = [];
         result = users.map(user => {
             return {
                 ...user,
@@ -120,12 +119,11 @@ class UserService {
         if (!user) {
             throw new UserValidationError(["id not existed"])
         }
-        var result: User[] = [
+        const result: UserModel[] = [
             {
                 ...user
             }
         ];
-        console.log(result);
         this.queryAttribute(result);
         this.queryMedia(result);
         return result[0];
@@ -136,13 +134,13 @@ class UserService {
         if (errors.length > 0) {
             throw new UserValidationError(errors);
         }
-        var insertUser:User =new User();
+        const insertUser:User =new User();
         insertUser.last_name=createModel.last_name;
         insertUser.first_name=createModel.first_name;
         insertUser.birthday=createModel.birthday;
         insertUser.email=createModel.email;
 
-        var userID = this.userRepo.createNew(insertUser);
+        const userID = this.userRepo.createNew(insertUser);
 
         if (createModel.attributes){
             this.createAttribute(createModel.attributes,userID);
@@ -154,7 +152,7 @@ class UserService {
     }
 }
 
-let userRepo = new UserRepository();
-let userAttrRepo = new UserAttributeRepository();
+const userRepo = new UserRepository();
+const userAttrRepo = new UserAttributeRepository();
 
 export default new UserService(userRepo, userAttrRepo, AttributeService, ImageService);

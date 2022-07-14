@@ -1,17 +1,4 @@
-import { Singleton } from "https://deno.land/x/deninject/mod.ts";
-import { SSQL, SSQLTable } from "../lib/SmallSQLLite.ts";
-export class User extends SSQLTable {
-    id = -1;
-    first_name = "";
-    last_name = "";
-    birthday = 0;
-    email = "";
-}
-export class Attribute_User extends SSQLTable {
-    user_id = 0;
-    attribute_id = 0;
-}
-const orm=  new SSQL("data.db",[User,Attribute_User])
+import {User,Attribute_User,orm} from "./db.ts";
 
 export class UserRepository {
     findMany(limit: number, offset: number) {
@@ -28,7 +15,6 @@ export class UserRepository {
         return user.id;
     }
 }
-
 
 export class UserAttributeRepository {
     findByUserIDs(userIDs: number[]) {

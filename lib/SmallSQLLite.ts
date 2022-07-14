@@ -122,8 +122,6 @@ export class SSQL {
     }
 
     private insertRecord<T extends SSQLTable>(table: T) {
-        console.log(table);
-        console.log(table.constructor.name);
         const names = Object.getOwnPropertyNames(table);
         names.splice(0, 1);
         const statement = 'INSERT INTO "' +

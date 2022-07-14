@@ -1,6 +1,7 @@
 
 export * from "./userRepository.ts"
 export * from "./userService.ts"
+export {User,Attribute_User} from "./db.ts"
 
 export interface UserModel {
     id:number;
@@ -14,6 +15,7 @@ export interface UserModel {
 
 export interface UserAttribute {
     name:string;
+    attribute_id:number;
 }
 
 export interface UserMedia {
@@ -23,8 +25,8 @@ export interface UserMedia {
     width:number;
 }
 
-export interface CreateUserMedia  extends UserMedia{
-}
+export type CreateUserMedia  = UserMedia;
+
 export interface CreateUserAttribute {
     attribute_id:number;
 }
