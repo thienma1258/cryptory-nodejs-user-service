@@ -2,6 +2,7 @@
 export * from "./userRepository.ts"
 export * from "./userService.ts"
 export {User,Attribute_User} from "./db.ts"
+import {  required, isNumber,isString } from "https://deno.land/x/validasaur/mod.ts";
 
 export interface UserModel {
     id:number;
@@ -39,6 +40,13 @@ export interface CreateNewUser{
     media?:CreateUserMedia[],
     attributes?:CreateUserAttribute[],
 }
+
+export const validateCreateUser = {
+    first_name: [required,isString]
+    last_name: [required,isString],
+    birthday: [required, isNumber]
+}
+
 
 
 export class UserValidationError extends Error {
