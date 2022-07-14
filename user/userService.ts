@@ -101,7 +101,7 @@ class UserService {
 
     query(limit: number, offset: number) {
         const users = this.userRepo.findMany(limit, offset);
-        const result: UserModel[] = [];
+        let result: UserModel[] = [];
         result = users.map(user => {
             return {
                 ...user,
