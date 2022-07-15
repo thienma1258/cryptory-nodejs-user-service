@@ -15,10 +15,10 @@ export default {
         const limitRaw=request.url.searchParams.get('limit');
         let offset = DEFAULT_QUERY_OFFSET;
         let limit= DEFAULT_QUERY_LIMIT;
-        if(!isNaN(offsetRaw)){
+        if(offsetRaw && !isNaN(offsetRaw)){
             offset=Number(offsetRaw);
         }
-        if(!isNaN(limitRaw)){
+        if(limitRaw &&!isNaN(limitRaw)){
             limit=Number(limitRaw);
         }
         const count = UserService.count();
